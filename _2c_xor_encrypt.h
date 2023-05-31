@@ -23,6 +23,21 @@
 
 
 //----------------------------------------------------------------------------
+#if !defined(DISABLE_CUSTOM_UMBA_RCFS_RC_FILENAME_DEFS)
+
+    #define CUSTOM_UMBA_RCFS_RC_FILENAME(filename, filenameSize) \
+                                std::string( (filename), (filenameSize) )
+
+    #define CUSTOM_UMBA_RCFS_RC_FILENAME_XORED(filename, filenameSize, filenameXorSize, filenameXorSeed, filenameXorInc) \
+            _2c::xorDecryptCopy(std::string( (filename), (filenameSize) ), (_2c::EKeySize)(filenameXorSize), (filenameXorSeed), (filenameXorInc) )
+
+#endif
+
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
 namespace _2c {
 
 //----------------------------------------------------------------------------
@@ -192,11 +207,55 @@ void xorEncrypt(IteratorType iterBegin, IteratorType iterEnd, EKeySize ks, unsig
 }
 
 //----------------------------------------------------------------------------
+inline
+std::string xorEncryptCopy(const std::string &data, EKeySize ks, unsigned seed, unsigned incVal)
+{
+    std::string dataCopy = data; 
+    xorEncrypt(dataCopy.begin(), dataCopy.end(), ks, seed, incVal);
+    return dataCopy;
+}
+
+//----------------------------------------------------------------------------
+template <typename CharType> inline
+std::vector<CharType> xorEncryptCopy(const std::vector<CharType> &data, EKeySize ks, unsigned seed, unsigned incVal)
+{
+    std::vector<CharType> dataCopy = data; 
+    xorEncrypt(dataCopy.begin(), dataCopy.end(), ks, seed, incVal);
+    return dataCopy;
+}
+
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
 template<typename IteratorType>
 void xorDecrypt(IteratorType iterBegin, IteratorType iterEnd, EKeySize ks, unsigned seed, unsigned incVal)
 {
     xorEncrypt(iterBegin, iterEnd, ks, seed, incVal);
 }
+
+//----------------------------------------------------------------------------
+inline
+std::string xorDecryptCopy(const std::string &data, EKeySize ks, unsigned seed, unsigned incVal)
+{
+    std::string dataCopy = data; 
+    xorDecrypt(dataCopy.begin(), dataCopy.end(), ks, seed, incVal);
+    return dataCopy;
+}
+
+//----------------------------------------------------------------------------
+template <typename CharType> inline
+std::vector<CharType> xorDecryptCopy(const std::vector<CharType> &data, EKeySize ks, unsigned seed, unsigned incVal)
+{
+    std::vector<CharType> dataCopy = data; 
+    xorDecrypt(dataCopy.begin(), dataCopy.end(), ks, seed, incVal);
+    return dataCopy;
+}
+
+//----------------------------------------------------------------------------
+
+
 
 //----------------------------------------------------------------------------
 inline
