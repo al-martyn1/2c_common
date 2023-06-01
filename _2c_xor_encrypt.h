@@ -25,12 +25,15 @@
 //----------------------------------------------------------------------------
 #if !defined(DISABLE_CUSTOM_UMBA_RCFS_RC_FILENAME_DEFS)
 
-    #define CUSTOM_UMBA_RCFS_RC_FILENAME(filename, filenameSize) \
-                                std::string( (filename), (filenameSize) )
+    #if !defined(CUSTOM_UMBA_RCFS_RC_FILENAME)
+        #define CUSTOM_UMBA_RCFS_RC_FILENAME(filename, filenameSize) \
+                                    std::string( (filename), (filenameSize) )
+    #endif
 
-    #define CUSTOM_UMBA_RCFS_RC_FILENAME_XORED(filename, filenameSize, filenameXorSize, filenameXorSeed, filenameXorInc) \
-            _2c::xorDecryptCopy(std::string( (filename), (filenameSize) ), (_2c::EKeySize)(filenameXorSize), (filenameXorSeed), (filenameXorInc) )
-
+    #if !defined(CUSTOM_UMBA_RCFS_RC_FILENAME_XORED)
+        #define CUSTOM_UMBA_RCFS_RC_FILENAME_XORED(filename, filenameSize, filenameXorSize, filenameXorSeed, filenameXorInc) \
+                _2c::xorDecryptCopy(std::string( (filename), (filenameSize) ), (_2c::EKeySize)(filenameXorSize), (filenameXorSeed), (filenameXorInc) )
+    #endif
 #endif
 
 //----------------------------------------------------------------------------
