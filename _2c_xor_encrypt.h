@@ -71,13 +71,20 @@ UXorEncryptionKey xorEncryptionKeyAdd( EKeySize ks, const UXorEncryptionKey &k, 
 {
     UXorEncryptionKey res = k;
 
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable:4061) // warning C4061: enumerator in switch of enum is not explicitly handled by a case label
+#endif
+
     switch(ks)
     {
         case EKeySize::Unsigned: res.k4 += a.k4; break;
         case EKeySize::Short   : res.k2 += a.k2; break;
         default                : res.k1 += a.k1;
     }
-
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
     return res;
 }
 
@@ -88,6 +95,10 @@ std::size_t xorEncryptionKeyToBytes( EKeySize ks
                                    , char *pData // must be enough to hold at least 4 bytes
                                    )
 {
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable:4061) // warning C4061: enumerator in switch of enum is not explicitly handled by a case label
+#endif
     switch(ks)
     {
         case EKeySize::Unsigned:
@@ -112,12 +123,20 @@ std::size_t xorEncryptionKeyToBytes( EKeySize ks
                  return 1;
              }
     }
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+
 }
 
 //----------------------------------------------------------------------------
 inline
 std::size_t xorEncryptionKeySize( EKeySize ks )
 {
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable:4061) // warning C4061: enumerator in switch of enum is not explicitly handled by a case label
+#endif
     switch(ks)
     {
         case EKeySize::Unsigned:
@@ -132,6 +151,9 @@ std::size_t xorEncryptionKeySize( EKeySize ks )
         default                :
                  return 0;
     }
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
 }
 
 //----------------------------------------------------------------------------
@@ -141,6 +163,10 @@ void xorEncryptionKeyAssign( EKeySize ks
                            , unsigned v
                            )
 {
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable:4061) // warning C4061: enumerator in switch of enum is not explicitly handled by a case label
+#endif
     switch(ks)
     {
         case EKeySize::Unsigned:
@@ -160,6 +186,9 @@ void xorEncryptionKeyAssign( EKeySize ks
                  k.k1 = (unsigned char)(v&0xFF);
              }
     }
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
 
 }
 
@@ -167,6 +196,10 @@ void xorEncryptionKeyAssign( EKeySize ks
 inline
 unsigned xorEncryptionKeyToUnsigned( EKeySize ks, UXorEncryptionKey k )
 {
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable:4061) // warning C4061: enumerator in switch of enum is not explicitly handled by a case label
+#endif
     switch(ks)
     {
         case EKeySize::Unsigned:
@@ -178,6 +211,9 @@ unsigned xorEncryptionKeyToUnsigned( EKeySize ks, UXorEncryptionKey k )
         default                :
                  return (unsigned)k.k1;
     }
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
 }
 
 
@@ -206,7 +242,7 @@ void xorEncrypt(IteratorType iterBegin, IteratorType iterEnd, EKeySize ks, unsig
         xorEncryptionKeyToBytes( ks, key, &keyBytes[0] );
         for(std::size_t i=0; i!=keySize && it!=iterEnd; ++i, ++it)
         {
-            *it = *it ^ keyBytes[i];
+            *it = (typename IteratorType::value_type)(*it ^ keyBytes[i]);
         }
 
         key = xorEncryptionKeyAdd( ks, key, keyInc);
